@@ -1,12 +1,19 @@
 const { Pool } = require('pg');
 require('dotenv').config();
 
-const pool = new Pool({
+// Database connection configuration
+const poolConfig = {
   connectionString: process.env.DATABASE_URL,
-  ssl: {
+};
+
+// Enable SSL for production (required for Neon and most cloud databases)
+if (process.env.DATABASE_URL && process.env.DATABASE_URL.includes('sslmode=require')) {
+  poolConfig.ssl = {
     rejectUnauthorized: false
-  }
-});
+  };
+}
+
+const pool = new Pool(poolConfig);
 
 // Initialize database tables
 async function initializeDatabase() {

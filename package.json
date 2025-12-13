@@ -8,6 +8,10 @@
     "dev": "nodemon server.js",
     "create-admin": "node scripts/createAdmin.js"
   },
+  "engines": {
+    "node": ">=14.0.0",
+    "npm": ">=6.0.0"
+  },
   "keywords": ["library", "catalogue", "express"],
   "author": "",
   "license": "ISC",
