@@ -59,17 +59,17 @@ router.get('/:id', async (req, res) => {
 // POST create new book (Admin only)
 router.post('/', authenticateToken, requireAdmin, async (req, res) => {
   try {
-    const { title, author, isbn, genre, publication_year, publisher, description, available } = req.body;
+    const { title, author, isbn, genre, publication_year, publisher, description, image_url, available } = req.body;
     
     if (!title || !author) {
       return res.status(400).json({ error: 'Title and author are required' });
     }
 
     const result = await pool.query(
-      `INSERT INTO books (title, author, isbn, genre, publication_year, publisher, description, available)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+      `INSERT INTO books (title, author, isbn, genre, publication_year, publisher, description, image_url, available)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
        RETURNING *`,
-      [title, author, isbn || null, genre || null, publication_year || null, publisher || null, description || null, available !== undefined ? available : true]
+      [title, author, isbn || null, genre || null, publication_year || null, publisher || null, description || null, image_url || null, available !== undefined ? available : true]
     );
 
     res.status(201).json(result.rows[0]);
@@ -86,7 +86,7 @@ router.post('/', authenticateToken, requireAdmin, async (req, res) => {
 router.put('/:id', authenticateToken, requireAdmin, async (req, res) => {
   try {
     const { id } = req.params;
-    const { title, author, isbn, genre, publication_year, publisher, description, available } = req.body;
+    const { title, author, isbn, genre, publication_year, publisher, description, image_url, available } = req.body;
 
     const result = await pool.query(
       `UPDATE books 
@@ -97,11 +97,12 @@ router.put('/:id', authenticateToken, requireAdmin, async (req, res) => {
            publication_year = COALESCE($5, publication_year),
            publisher = COALESCE($6, publisher),
            description = COALESCE($7, description),
-           available = COALESCE($8, available),
+           image_url = COALESCE($8, image_url),
+           available = COALESCE($9, available),
            updated_at = CURRENT_TIMESTAMP
-       WHERE id = $9
+       WHERE id = $10
        RETURNING *`,
-      [title, author, isbn, genre, publication_year, publisher, description, available, id]
+      [title, author, isbn, genre, publication_year, publisher, description, image_url, available, id]
     );
 
     if (result.rows.length === 0) {

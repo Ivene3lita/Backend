@@ -34,11 +34,11 @@ Backend API for the Digital Library Catalogue System built with Node.js, Express
   - Returns: Book object
 - `POST /api/books` - Create a new book (Admin only)
   - Headers: `Authorization: Bearer <token>`
-  - Body: `{ title, author, isbn?, genre?, publication_year?, publisher?, description? }`
+  - Body: `{ title, author, isbn?, genre?, publication_year?, publisher?, description?, image_url? }`
   - Returns: Created book object
 - `PUT /api/books/:id` - Update a book (Admin only)
   - Headers: `Authorization: Bearer <token>`
-  - Body: Same as POST
+  - Body: `{ title?, author?, isbn?, genre?, publication_year?, publisher?, description?, image_url? }`
   - Returns: Updated book object
 - `DELETE /api/books/:id` - Delete a book (Admin only)
   - Headers: `Authorization: Bearer <token>`
@@ -97,6 +97,7 @@ The system automatically creates three tables on first run:
 - publication_year (INTEGER)
 - publisher (VARCHAR(255))
 - description (TEXT)
+- image_url (VARCHAR(500)) -- URL to book cover image
 - available (BOOLEAN DEFAULT true)
 - created_at (TIMESTAMP DEFAULT CURRENT_TIMESTAMP)
 - updated_at (TIMESTAMP DEFAULT CURRENT_TIMESTAMP)

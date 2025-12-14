@@ -57,10 +57,22 @@ async function initializeDatabase() {
         publication_year INTEGER,
         publisher VARCHAR(255),
         description TEXT,
+        image_url VARCHAR(500),
         available BOOLEAN DEFAULT true,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       )
+    `);
+
+    // Add image_url column if it doesn't exist (for existing databases)
+    await pool.query(`
+      DO $$ 
+      BEGIN
+        IF NOT EXISTS (SELECT 1 FROM information_schema.columns 
+                       WHERE table_name='books' AND column_name='image_url') THEN
+          ALTER TABLE books ADD COLUMN image_url VARCHAR(500);
+        END IF;
+      END $$;
     `);
 
     // Create borrowings table if it doesn't exist
